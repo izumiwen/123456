@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+<div id="app">
+    <button v-on:click="handleClick">顯示資料</button>
+    <table>
+        <thead>
+        <tr>
+            <th>price</th>
+            <th>Time</th>
+            <th>name</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="item in data">
+            <td>{{ item.price }}</td>
+            <td>{{ item.Time }}</td>
+            <td>{{ item.name }}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    const app = Vue.createApp({
+        data() {
+            return {
+                data: []
+            };
+        },
+        methods: {
+            async handleClick() {
+                console.log("data");
+
+                const url = "http://localhost:3000/api"; // 資料傳送到的 URL
+                try {
+                    const response = await fetch(url, {
+                        method: 'GET',
+                    });
+                    const res_data = await response.json();
+                    this.data = res_data ;
+                    console.log("成功", res_data );
+                } catch (error) {
+                    console.log("錯誤", error);
+                }
+            }
+        }
+    });
+
+    app.mount('#app');
+</script>
+
+</body>
+</html>

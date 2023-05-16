@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .form-container {
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+
+        .form-container .form-header {
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .form-container .form-content {
+            display: none;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<form id="historical_price" action="http://localhost:3000/api" method="post">
+    <label for="price">price</label>
+    <input type="text" id="price" name="price">
+    <label for="Time">Time</label>
+    <input type="date" id="Time" name="Time">
+    <label for="name">name</label>
+    <input type="text" id="name" name="name">
+</form>
+<button type="submit">Submit</button>
+<div id="app">
+    <button v-on:click="handleClick">顯示資料</button>
+    <table>
+        <thead>
+        <tr>
+            <th>price</th>
+            <th>Time</th>
+            <th>name</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="item in data">
+            <td>{{ item.price }}</td>
+            <td>{{ item.Time }}</td>
+            <td>{{ item.name }}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<p id="log"></p>
+<script>
+    const app = Vue.createApp({
+        data() {
+            return {
+                data: []
+            };
+        },
+        methods: {
+            async handleClick() {
+                console.log("data");
+                const url = "http://localhost:3000/api"; // 資料傳送到的 URL
+                try {
+                    const response = await fetch(url, {
+                        method: 'GET',
+                    });
+                    const res_data = await response.json();
+                    this.data = res_data ;
+                    console.log("成功", res_data );
+                } catch (error) {
+                    console.log("錯誤", error);
+                }
+            }
+        }
+    });
+
+    app.mount('#app');
+</script>
+</body>
+</html>
